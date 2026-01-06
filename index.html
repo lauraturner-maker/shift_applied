@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fab Shift Overview</title>
+
+<style>
+    /* GLOBAL FIX — prevents overflow in Staffbase containers */
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #ffffff;
+        padding: 0;
+        margin: 0;
+    }
+
+    .widget {
+        width: 100%;
+        max-width: 480px;
+        margin: auto;
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 16px;
+    }
+
+    .date-range {
+        text-align: center;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #333;
+        font-size: 16px;
+    }
+
+    .nav-arrows {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 20px;
+        padding: 0 4px;
+        color: #444;
+        cursor: pointer;
+    }
+
+    .week-days {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 4px;
+        margin-bottom: 12px;
+        font-size: 13px;
+        color: #777;
+    }
+
+    .week-days div {
+        width: 100%;
+        text-align: center;
+        padding: 8px 0;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    /* Applied Materials Blue hint */
+    .week-days .active {
+        background: #0073CF; 
+        color: white;
+        font-weight: 600;
+    }
+
+    .summary {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #444;
+    }
+
+    /* Day label */
+    .day-label {
+        margin-top: 20px;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #444;
+        font-size: 15px;
+        padding-left: 4px;
+    }
+
+    .shift-card {
+        width: 100%;
+        background: white;
+        padding: 14px;
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        border-left: 4px solid #0073CF; /* Applied Blue */
+        margin-bottom: 16px;
+    }
+
+    .shift-time {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .shift-details {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 3px;
+    }
+
+    .shift-meta {
+        text-align: right;
+        font-size: 13px;
+        color: #777;
+        margin-top: 6px;
+    }
+
+    /* ========== Larger button (30% bigger) ========== */
+    .swap-btn {
+        margin-top: 10px;
+        padding: 12px 14px;            
+        font-size: 15px;               
+        border-radius: 8px;            
+        background: #0073CF; /* Applied Blue */
+        color: white;
+        border: none;
+        cursor: pointer;
+        width: 100%;                   
+    }
+
+    .swap-btn:hover {
+        background: #005bb5;
+    }
+
+    /* Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        z-index: 9999;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 20px;
+        width: 100%;
+        max-width: 360px;
+        border-radius: 12px;
+    }
+
+    .close {
+        float: right;
+        cursor: pointer;
+        font-size: 22px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="widget">
+
+    <h2 style="margin-bottom: 2px; text-align:center;">My Rosters</h2>
+
+    <div class="date-range">Dec 8 – Dec 14, 2025</div>
+
+    <div class="nav-arrows">
+        <span>&lt;</span>
+        <span>&gt;</span>
+    </div>
+
+    <div class="week-days">
+        <div>Mo<br>8</div>
+        <div class="active">Tu<br>9</div>
+        <div>We<br>10</div>
+        <div>Th<br>11</div>
+        <div>Fr<br>12</div>
+        <div>Sa<br>13</div>
+        <div>Su<br>14</div>
+    </div>
+
+    <div class="summary">34 hrs / Fab A</div>
+
+    <div class="day-label">Tu, Dec 9</div>
+    <div class="shift-card">
+        <div class="shift-time">6:00 AM – 6:00 PM</div>
+        <div class="shift-details">Manufacturing Tech III (Etch)</div>
+        <div class="shift-details">Fab 8 – Cleanroom A</div>
+        <div class="shift-meta">12 hrs</div>
+        <button class="swap-btn" onclick="openSwapModal('6:00 AM – 6:00 PM', 'Tech III')">Request Swap</button>
+    </div>
+
+    <div class="day-label">Wed, Dec 10</div>
+    <div class="shift-card">
+        <div class="shift-time">6:00 PM – 6:00 AM</div>
+        <div class="shift-details">Equipment Support (CVD)</div>
+        <div class="shift-details">Austin Manufacturing Center</div>
+        <div class="shift-meta">12 hrs</div>
+        <button class="swap-btn" onclick="openSwapModal('6:00 PM – 6:00 AM', 'Equip Support')">Request Swap</button>
+    </div>
+
+    <div class="day-label">Thu, Dec 11</div>
+    <div class="shift-card">
+        <div class="shift-time">8:00 AM – 6:00 PM</div>
+        <div class="shift-details">Sr. Process Engineer</div>
+        <div class="shift-details">Maydan Technology Center</div>
+        <div class="shift-meta">10 hrs</div>
+        <button class="swap-btn" onclick="openSwapModal('8:00 AM – 6:00 PM', 'Process Eng')">Request Swap</button>
+    </div>
+
+</div>
+
+<div id="swapModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeSwapModal()">&times;</span>
+        <h3>Request Shift Swap</h3>
+        <p id="selectedShift"></p>
+
+        <label><strong>Swap with colleague:</strong></label><br><br>
+        <select id="colleague" style="width:100%;padding:10px;border-radius:6px;font-size:15px;">
+            <option value="J. Smith (Tech)">J. Smith (Tech)</option>
+            <option value="A. Chen (Eng)">A. Chen (Eng)</option>
+            <option value="M. Kowalski (Ops)">M. Kowalski (Ops)</option>
+            <option value="L. Gupta (Fab)">L. Gupta (Fab)</option>
+        </select>
+
+        <br><br>
+        <button class="swap-btn" onclick="sendSwapRequest()">Send Request</button>
+    </div>
+</div>
+
+<script>
+let chosenShiftTime = "";
+let chosenRole = "";
+
+function openSwapModal(time, role) {
+    chosenShiftTime = time;
+    chosenRole = role;
+    
+    document.getElementById("selectedShift").innerHTML = 
+        `<strong>Shift:</strong> ${time}<br><span style="font-size:13px;color:#666">${role}</span>`;
+    
+    document.getElementById("swapModal").style.display = "flex";
+}
+
+function closeSwapModal() {
+    document.getElementById("swapModal").style.display = "none";
+}
+
+// Close modal if clicking outside content
+window.onclick = function(event) {
+    const modal = document.getElementById("swapModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+async function sendSwapRequest() {
+    const colleague = document.getElementById("colleague").value;
+
+    const payload = {
+        "accessorIds": ["680c0cd13efa2971fe53c4c7"],
+        "channels": ["notificationCenter", "push"],
+        "content": {
+            "en_US": { "text": `Shift Swap Request: ${chosenShiftTime} (${chosenRole}) → ${colleague}` },
+            "de_DE": { "text": `Schichttausch angefordert: ${chosenShiftTime} → ${colleague}` }
+        },
+        "icon": { "en_US": {"type":"font","char":""}, "de_DE": {"type":"font","char":""} },
+        "image": {
+            "en_US": {
+                "type":"image",
+                // Updated to a generic cleanroom/semiconductor image
+                "href":"https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80",
+                "width":600,"height":400
+            },
+            "de_DE": {
+                "type":"image",
+                "href":"https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80",
+                "width":600,"height":400
+            }
+        },
+        // Kept original Link
+        "link":"https://app.staffbase.com/content/page/6914e3ecd5cde774c74364f1"
+    };
+
+    try {
+        const res = await fetch("https://app.staffbase.com/api/branch/notifications", {
+            method: "POST",
+            headers: {
+                // SECURITY NOTE: In a real production app, do not expose API Keys in client-side HTML.
+                // This request should theoretically go to your own backend, which then calls Staffbase.
+                "Authorization":"Basic NjgwZmFjZDlhZmY4ZTkyZDQ3OGVkMzdjOk9bbztXbF9IMnQpQjM1SUpoe1ViVyshdVRaKWlFLU9xTF5KSSsta10hOUIobFRGLTJDc3F6ZW4yQzBFdFNZSzI=",
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if(res.ok) {
+            alert("Swap request sent to " + colleague);
+        } else {
+            console.error(res);
+            alert("Error sending request (Check Console)");
+        }
+    } catch (e) {
+        console.error(e);
+        alert("Network error");
+    }
+
+    closeSwapModal();
+}
+</script>
+
+</body>
+</html>
